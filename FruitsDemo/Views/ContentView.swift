@@ -5,6 +5,7 @@ import SwiftUI
 //TODO: Create the navigation
 struct ContentView: View {
     @StateObject private var store = FruitStore()
+    @State private var showAddFruit = false
     @State private var newFruit = FruitStore.defaultFruit
     
     var body: some View {
@@ -24,9 +25,8 @@ struct ContentView: View {
                     EditButton()
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: AddFruitView(newFruit: $newFruit) { fruit in
-                        store.fruits.append(fruit)
-                        newFruit = FruitStore.defaultFruit
+                    Button (action: {
+                        showAddFruit = true
                     }) {
                         Text("+")
                             .font(.title)
@@ -34,6 +34,15 @@ struct ContentView: View {
                     }
                 }
             }
+            .sheet(isPresented: $showAddFruit) {
+                            NavigationView {
+                                AddFruitView(newFruit: $newFruit) { fruit in
+                                    store.fruits.append(fruit)
+                                    newFruit = FruitStore.defaultFruit
+                                    showAddFruit = false
+                                }
+                            }
+                        }
 
         }
     }
