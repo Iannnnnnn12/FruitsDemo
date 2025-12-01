@@ -5,7 +5,6 @@ import SwiftUI
 //TODO: Create the navigation
 struct ContentView: View {
     @StateObject private var store = FruitStore()
-    @State private var showAddFruit = false
     @State private var newFruit = FruitStore.defaultFruit
     
     var body: some View {
@@ -16,8 +15,28 @@ struct ContentView: View {
                         FruitRowView(fruit: fruit)
                     }
                 }
+                .onDelete(perform: deleteFruit)
             }
+            .navigationTitle("Fruits")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    EditButton()
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    NavigationLink(destination: AddFruitView(newFruit: $newFruit)) {
+                        Text("+")
+                            .font(.title)
+                            .fontWeight(.bold)
+                    }
+                }
+            }
+
         }
+    }
+    
+    func deleteFruit(at offsets: IndexSet) {
+        store.fruits.remove(atOffsets: offsets)
     }
 }
 
