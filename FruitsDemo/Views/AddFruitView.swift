@@ -29,6 +29,7 @@ struct AddFruitView: View {
                     onAdd(newFruit)
                     presentationMode.wrappedValue.dismiss()
                 }
+                .disabled(newFruit.name.trimmingCharacters(in: .whitespaces).isEmpty)
             }
         }
     }
