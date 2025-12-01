@@ -1,22 +1,19 @@
-
 import SwiftUI
 
-//TODO: Create a list
-//TODO: Create the navigation
 struct ContentView: View {
     @StateObject private var store = FruitStore()
     @State private var showAddFruit = false
-    @State private var newFruit = Fruit(name: "", emoji: .apple, description: "")
+    @State private var newFruit = FruitStore.defaultFruit
     
     var body: some View {
-        NavigationView{
-            List{
+        NavigationView {
+            List {
                 ForEach(store.fruits) { fruit in
-                    NavigationLink(destination: DetailFruitView(fruit: fruit)){
+                    NavigationLink(destination: DetailFruitView(fruit: fruit)) {
                         FruitRowView(fruit: fruit)
                     }
                 }
-                .onDelete(perform: deleteFruit)
+                .onDelete(perform: store.deleteFruit)
             }
             .navigationTitle("Fruits")
             .navigationBarTitleDisplayMode(.inline)
@@ -25,10 +22,10 @@ struct ContentView: View {
                     EditButton()
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button (action: {
-                        newFruit = Fruit(name: "Apple", emoji: .apple, description: "")
+                    Button {
+                        newFruit = FruitStore.defaultFruit
                         showAddFruit = true
-                    }) {
+                    } label: {
                         Text("+")
                             .font(.title)
                             .fontWeight(.bold)
@@ -41,19 +38,13 @@ struct ContentView: View {
                         newFruit: $newFruit,
                         existingFruits: store.fruits,
                         onAdd: { fruit in
-                            store.fruits.append(fruit)
-                            newFruit = FruitStore.defaultFruit
+                            store.addFruit(fruit)
                             showAddFruit = false
                         }
                     )
                 }
             }
-
         }
-    }
-    
-    func deleteFruit(at offsets: IndexSet) {
-        store.fruits.remove(atOffsets: offsets)
     }
 }
 
