@@ -4,6 +4,9 @@ import SwiftUI
 struct AddFruitView: View {
     
     @Binding var newFruit:Fruit
+    var onAdd: (Fruit) -> Void
+    @Environment(\.presentationMode) var presentationMode
+
     
     var body: some View {
         Form {
@@ -18,15 +21,25 @@ struct AddFruitView: View {
                     //TODO: .listRowInsets(EdgeInsets())
             }
         }
+        .navigationTitle("Add Fruit")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Add") {
+                    onAdd(newFruit)
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+        }
     }
 }
 
 struct AddFruitView_Previews: PreviewProvider {
     static var previews: some View {
-        AddFruitView(newFruit: .constant(FruitStore.defaultFruit))
-        AddFruitView(newFruit: .constant(FruitStore.defaultFruit))
+        AddFruitView(newFruit: .constant(FruitStore.defaultFruit),onAdd: { _ in })
+        AddFruitView(newFruit: .constant(FruitStore.defaultFruit),onAdd: { _ in })
             .preferredColorScheme(.dark)
-        AddFruitView(newFruit: .constant(FruitStore.defaultFruit))
+        AddFruitView(newFruit: .constant(FruitStore.defaultFruit),onAdd: { _ in })
             .previewLayout(.fixed(width: 480, height: 320))
     }
 }

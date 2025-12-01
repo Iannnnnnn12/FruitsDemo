@@ -24,7 +24,10 @@ struct ContentView: View {
                     EditButton()
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination: AddFruitView(newFruit: $newFruit)) {
+                    NavigationLink(destination: AddFruitView(newFruit: $newFruit) { fruit in
+                        store.fruits.append(fruit)
+                        newFruit = FruitStore.defaultFruit
+                    }) {
                         Text("+")
                             .font(.title)
                             .fontWeight(.bold)
