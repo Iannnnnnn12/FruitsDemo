@@ -6,7 +6,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var store = FruitStore()
     @State private var showAddFruit = false
-    @State private var newFruit = FruitStore.defaultFruit
+    @State private var newFruit = Fruit(name: "", emoji: .apple, description: "")
     
     var body: some View {
         NavigationView{
@@ -26,6 +26,7 @@ struct ContentView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button (action: {
+                        newFruit = Fruit(name: "Apple", emoji: .apple, description: "")
                         showAddFruit = true
                     }) {
                         Text("+")
@@ -35,14 +36,18 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $showAddFruit) {
-                            NavigationView {
-                                AddFruitView(newFruit: $newFruit) { fruit in
-                                    store.fruits.append(fruit)
-                                    newFruit = FruitStore.defaultFruit
-                                    showAddFruit = false
-                                }
-                            }
+                NavigationView {
+                    AddFruitView(
+                        newFruit: $newFruit,
+                        existingFruits: store.fruits,
+                        onAdd: { fruit in
+                            store.fruits.append(fruit)
+                            newFruit = FruitStore.defaultFruit
+                            showAddFruit = false
                         }
+                    )
+                }
+            }
 
         }
     }
